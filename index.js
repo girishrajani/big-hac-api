@@ -22,3 +22,7 @@ database.on('error', (error) => {
 database.once('connected', () => {
     console.log('Database Connected');
 })
+
+
+const routes = require('./routes/routes');
+app.use('/api', routes)
