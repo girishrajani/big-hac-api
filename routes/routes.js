@@ -2,30 +2,37 @@ const express = require('express');
 
 const router = express.Router()
 
-//Post Method
-router.post('/post', (req, res) => {
-    res.send('Post API')
+const Ticket = require('../models/model');
+
+router.post('/post', async (req, res) => {
+    const data = new Ticket({
+        email: req.body.email,
+        desig: req.body.desig,
+        phone: req.body.phone,
+        cat: req.body.cat,
+        subject: req.body.subject,
+        desc: req.body.desc,
+        keywords: req.body.keywords
+    })
+
+    try {
+        const dataToSave = await data.save();
+        res.status(200).json(dataToSave)
+    }
+    catch (error) {
+        res.status(400).json({message: error.message})
+    }
 })
 
-//Get all Method
-router.get('/getAll', (req, res) => {
-    res.send('Get All API')
-})
-
-
-//Get by ID Method
-router.get('/getOne/:id', (req, res) => {
-    res.send(req.params.id)
-})
-
-//Update by ID Method
-router.patch('/update/:id', (req, res) => {
-    res.send(req.params.id)
-})
-
-//Delete by ID Method
-router.delete('/delete/:id', (req, res) => {
-    res.send(req.params.id)
+router.get('/getAll', async (req, res) => {
+    try{
+        const data = await Ticket.find();
+        res.json(data)
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
 })
 
 module.exports = router;
+
